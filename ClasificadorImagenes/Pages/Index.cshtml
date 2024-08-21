@@ -13,13 +13,13 @@
                 </svg>
             </div>
             <h3 class="fs-2 text-body-emphasis">Carga tu archivo</h3>
-            <form method="post" enctype="multipart/form-data">
+            <form method="post" enctype="multipart/form-data" id="formPrediction">
                 <div class="form-group">
                     <label for="Upload">Sube una imagen:</label>
                     <input type="file" accept="image/png,image/jpeg,image/jpg,image/bmp" name="Upload" id="Upload" class="form-control" onchange="previewImage(event)" />
                 </div>
                 <div class="d-grid gap-2 p-1">
-                    <button type="submit" class="btn btn-lg btn-success">Clasificar Imagen</button>
+                    <button type="submit" class="btn btn-lg btn-success" id="btn" onclick="load()">Clasificar Imagen</button>
                 </div>
             </form>
         </div>
@@ -87,6 +87,14 @@
             } else {
                 preview.src = "#";
             }
+        }
+
+        function load() {
+            var btn = document.getElementById("btn");
+            btn.innerHTML = "<span class='spinner-grow spinner-grow-sm' role='status' aria-hidden='true' id='texto'></span>Clasificando...";
+            btn.disabled = true;
+
+            document.getElementById("formPrediction").submit();
         }
     </script>
 }
