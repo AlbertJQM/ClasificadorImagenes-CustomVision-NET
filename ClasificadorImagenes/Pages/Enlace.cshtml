@@ -1,0 +1,26 @@
+﻿@page
+@model EnlaceModel
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+<h1>@ViewData["Title"]</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label for="Url">Ingresa una URL:</label>
+        <input type="text" name="Url" id="Url" class="form-control" placeholder="Ingresa una URL" required/>
+    </div>
+    <button type="submit" class="btn btn-primary">Clasificar Imagen</button>
+</form>
+@if (Model.Predictions != null && Model.Predictions.Count > 0)
+{
+    <h3>Resultados de la predicción:</h3>
+    <ul class="list-group">
+        @foreach (var prediction in Model.Predictions)
+        {
+            <li class="list-group-item">
+                <strong>@prediction.TagName:</strong> @String.Format("{0:P2}", prediction.Probability)
+            </li>
+        }
+    </ul>
+}
