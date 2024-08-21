@@ -23,9 +23,9 @@ namespace ClasificadorImagenes.Pages
             if (!string.IsNullOrEmpty(Url))
             {
                 Predictions = await _customVisionService.ClassifyImageFromUrlAsync(Url);
+                return Page();
             }
-
-            return Page();
+            return BadRequest("No se recibió ninguna imagen.");            
         }
 
         public void OnGet()

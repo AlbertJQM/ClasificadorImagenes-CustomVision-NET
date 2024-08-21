@@ -1,26 +1,113 @@
 ﻿@page
 @model EnlaceModel
 @{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "Clasificador por imagen - Mediante URL";
 }
-<h1>@ViewData["Title"]</h1>
-
-<form method="post">
-    <div class="form-group">
-        <label for="Url">Ingresa una URL:</label>
-        <input type="text" name="Url" id="Url" class="form-control" placeholder="Ingresa una URL" required/>
+<div class="container px-4 py-5" id="featured-3">
+    <h2 class="pb-2 border-bottom">@ViewData["Title"].ToString().ToUpper()</h2>
+    <p class="lead">
+        Este proyecto es una aplicación web desarrollada en ASP.NET Core Razor Pages que utiliza Azure Custom Vision para realizar la clasificación de imágenes. Los usuarios pueden subir una URL y la aplicación enviará la imagen al servicio de Custom Vision de Azure para obtener predicciones sobre su contenido.
+    </p>
+    <div class="row g-4 py-3 row-cols-1 row-cols-lg-3">
+        <div class="feature col">
+            <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
+                <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-link-45deg text-primary" viewBox="0 0 16 16">
+                        <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z" />
+                        <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z" />
+                    </svg>
+                </div>
+                <h3 class="fs-2 text-body-emphasis">Usa una URL</h3>
+                <form method="post" enctype="multipart/form-data" id="formPrediction">
+                    <div class="form-group">
+                        <label for="Url">Ingresa una URL:</label>
+                        <input type="text" name="Url" id="Url" class="form-control" placeholder="Ingresa una URL" required />
+                    </div>
+                    <div class="d-grid gap-2 p-1">
+                        <button type="submit" class="btn btn-lg btn-success" id="btn" onclick="load()">Clasificar Imagen</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="feature col">
+            <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
+                <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-image-fill text-primary" viewBox="0 0 16 16">
+                        <path d="M.002 3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-12a2 2 0 0 1-2-2zm1 9v1a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062zm5-6.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0" />
+                    </svg>
+                </div>
+                <h3 class="fs-2 text-body-emphasis">Visualízalo</h3>
+                @if (Model.Predictions != null && Model.Predictions.Count > 0)
+                {
+                    <img id="preview" src="@Model.Url" alt="Vista previa de la imagen" class="img-fluid" />
+                }
+                else
+                {
+                    <img id="preview" src="#" alt="Vista previa de la imagen" class="img-fluid" />
+                }
+            </div>
+        </div>
+        <div class="feature col">
+            <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
+                <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-clipboard-check-fill text-primary" viewBox="0 0 16 16">
+                        <path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z" />
+                        <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5zm6.854 7.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708" />
+                    </svg>
+                </div>
+                <h3 class="fs-2 text-body-emphasis">Resultado de la Predicción!</h3>
+                @if (Model.Predictions != null && Model.Predictions.Count > 0)
+                {
+                    <table class="table table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">Etiqueta</th>
+                                <th scope="col">Probabilidad</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            @foreach (var prediction in Model.Predictions)
+                            {
+                                <tr>
+                                    <td><strong>@prediction.TagName:</strong></td>
+                                    <td>
+                                        <div class="progress" role="progressbar" aria-label="Prediction label" aria-valuenow='@((prediction.Probability * 100).ToString("0.##"))' aria-valuemin="0" aria-valuemax="100">
+                                            <div class="progress-bar overflow-visible text-dark bg-warning" style='width: @String.Format("{0:P2}", prediction.Probability)'><strong>@String.Format("{0:P2}", prediction.Probability)</strong></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary">Clasificar Imagen</button>
-</form>
-@if (Model.Predictions != null && Model.Predictions.Count > 0)
-{
-    <h3>Resultados de la predicción:</h3>
-    <ul class="list-group">
-        @foreach (var prediction in Model.Predictions)
-        {
-            <li class="list-group-item">
-                <strong>@prediction.TagName:</strong> @String.Format("{0:P2}", prediction.Probability)
-            </li>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        function previewImage(event) {
+            var preview = document.getElementById('preview');
+            var file = event.target.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function () {
+                preview.src = reader.result;
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "#";
+            }
         }
-    </ul>
+
+        function load() {
+            var btn = document.getElementById("btn");
+            btn.innerHTML = "<span class='spinner-grow spinner-grow-sm' role='status' aria-hidden='true' id='texto'></span>Clasificando...";
+            btn.disabled = true;
+
+            document.getElementById("formPrediction").submit();
+        }
+    </script>
 }
